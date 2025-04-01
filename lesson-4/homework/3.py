@@ -12,7 +12,7 @@ def insert_underscore(txt: str) -> str:
             if i + 1 < len(txt) and (txt[i] in vowels or (i + 1 < len(txt) and txt[i + 1] in vowels)):
                 result.append(txt[i + 1])
                 i += 1
-            if i + 1 < len(txt):
+            if i + 1 < len(txt):        
                 result.append("_")
             count = 0
         
