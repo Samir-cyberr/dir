@@ -5,17 +5,20 @@ def create_database():
     conn = sqlite3.connect('roster.db')
     cursor = conn.cursor()
     
-    # Create Roster table
+    # Create Roster table with Rank column included from the beginning
     cursor.execute('''CREATE TABLE IF NOT EXISTS Roster
-                      (Name TEXT, Species TEXT, Age INTEGER)''')
+                      (Name TEXT, Species TEXT, Age INTEGER, Rank TEXT)''')
     
-    # Insert initial data
+    # Clear existing data to avoid duplicates on re-run
+    cursor.execute("DELETE FROM Roster")
+    
+    # Insert initial data (Rank will be NULL for now)
     initial_data = [
         ('Benjamin Sisko', 'Human', 40),
         ('Jadzia Dax', 'Trill', 300),
         ('Kira Nerys', 'Bajoran', 29)
     ]
-    cursor.executemany("INSERT INTO Roster VALUES (?, ?, ?)", initial_data)
+    cursor.executemany("INSERT INTO Roster (Name, Species, Age) VALUES (?, ?, ?)", initial_data)
     
     conn.commit()
     conn.close()
@@ -59,8 +62,11 @@ def add_rank_column():
     conn = sqlite3.connect('roster.db')
     cursor = conn.cursor()
     
-    # Add Rank column
-    cursor.execute("ALTER TABLE Roster ADD COLUMN Rank TEXT")
+    # Check if Rank column already exists
+    cursor.execute("PRAGMA table_info(Roster)")
+    columns = [col[1] for col in cursor.fetchall()]
+    if 'Rank' not in columns:
+        cursor.execute("ALTER TABLE Roster ADD COLUMN Rank TEXT")
     
     # Update ranks
     ranks = [
@@ -88,22 +94,11 @@ def query_sorted_by_age():
     conn.close()
 
 def main():
-    # Task 1: Database Creation
     create_database()
-    
-    # Update Data
     update_data()
-    
-    # Query Data
     query_bajorans()
-    
-    # Delete Data
     delete_over_100()
-    
-    # Bonus Task: Add Rank column
     add_rank_column()
-    
-    # Advanced Query
     query_sorted_by_age()
 
 if __name__ == "__main__":
