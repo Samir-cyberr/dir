@@ -19,32 +19,34 @@ for row in rows:
     temp = cols[1].text.strip()
     condition = cols[2].text.strip()
     
-    # Store data as dictionary
+    # Convert temperature to Celsius if necessary
+    if '°F' in temp:
+        temp_value = round((int(temp.replace('°F', '')) - 32) * 5 / 9)
+    else:
+        temp_value = int(temp.replace('°C', ''))
+
+    # Store data
     weather_data.append({
         'day': day,
-        'temperature': temp,
+        'temperature': f"{temp_value}°C",  # standardize to °C
         'condition': condition
     })
-    
-    # Extract temperature value (remove °C) for calculations
-    temp_value = int(temp.replace('°C', ''))
     temperatures.append(temp_value)
     
-    # Print each day's forecast
+    # Print forecast
     print(f"{day}: {temp}, {condition}")
 
-# Find day with highest temperature
+# Find max temp
 max_temp = max(temperatures)
-max_temp_days = [w['day'] for w in weather_data 
-                if int(w['temperature'].replace('°C', '')) == max_temp]
+max_temp_days = [w['day'] for w in weather_data if int(w['temperature'].replace('°C', '')) == max_temp]
 
-# Find sunny days
+# Sunny days
 sunny_days = [w['day'] for w in weather_data if w['condition'] == 'Sunny']
 
-# Calculate average temperature
+# Average temp
 avg_temp = sum(temperatures) / len(temperatures)
 
-# Print results
+# Print analysis
 print("\nAnalysis:")
 print("-" * 30)
 print(f"Highest temperature ({max_temp}°C) on: {', '.join(max_temp_days)}")
