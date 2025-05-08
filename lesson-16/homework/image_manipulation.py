@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 
 # Load the image using PIL
-image_path = "your_image.png"  # Replace with your actual image path
+image_path = "c:\\Users\\User\\dir\\lesson-16\\homework\\your_image.png"  # Replace with your actual image path
 image = Image.open(image_path)
 image_np = np.array(image)
 
